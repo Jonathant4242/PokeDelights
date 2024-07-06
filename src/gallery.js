@@ -1,0 +1,1 @@
+console.log('Gallery script is loaded and running!');
