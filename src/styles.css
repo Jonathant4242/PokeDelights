@@ -1,0 +1,162 @@
+/* Root Variables for Colors and Fonts */
+:root {
+    /* Color Palette */
+    --primary-color: #ffcb05; /* Pokémon Yellow */
+    --secondary-color: #3b4cca; /* Pokémon Blue */
+    --accent-color: #ff0000; /* Pokémon Red */
+    --background-color: #f8f8f8;
+    --text-color: #333;
+    --header-footer-bg-color: #e0e0e0;
+
+    /* Font Palette */
+    --font-primary: 'Arial', sans-serif;
+    --font-secondary: 'Helvetica', sans-serif;
+    --font-accent: 'Comic Sans MS', cursive;
+
+    /* Spacing */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+
+    /* Border Radius */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 16px;
+
+    /* Font Sizes */
+    --font-size-xs: 12px;
+    --font-size-sm: 14px;
+    --font-size-md: 16px;
+    --font-size-lg: 20px;
+    --font-size-xl: 24px;
+
+    /* Line Heights */
+    --line-height-xs: 1.2;
+    --line-height-sm: 1.4;
+    --line-height-md: 1.6;
+    --line-height-lg: 1.8;
+    --line-height-xl: 2.0;
+
+    /* Box Shadows */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Base styles for all screen sizes */
+body {
+    font-family: var(--font-primary);
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+header {
+    background-color: var(--header-footer-bg-color);
+    padding: var(--space-md) var(--space-lg);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    flex-wrap: wrap;
+}
+
+header .logo img {
+    max-height: 50px;
+}
+
+header h1 {
+    margin: 0;
+    font-family: var(--font-secondary);
+    color: var(--primary-color);
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+nav ul li {
+    margin: 0 var(--space-md);
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: var(--secondary-color);
+    font-family: var(--font-secondary);
+    font-size: var(--font-size-md);
+}
+
+main {
+    padding: var(--space-lg);
+}
+
+.cake-gallery {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.cake-gallery div {
+    margin: var(--space-sm);
+    border: 1px solid var(--secondary-color);
+    background-color: var(--background-color);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-md);
+}
+
+footer {
+    background-color: var(--header-footer-bg-color);
+    padding: var(--space-md) var(--space-lg);
+    text-align: center;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+footer p {
+    margin: 0;
+    color: var(--text-color);
+    font-family: var(--font-accent);
+    font-size: var(--font-size-md);
+    line-height: var(--line-height-md);
+}
+
+/* Mobile phones (up to 600px) */
+@media (max-width: 600px) {
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    nav ul {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    nav ul li {
+        margin: var(--space-xs) 0;
+    }
+}
+
+/* Tablets (601px to 900px) */
+@media (min-width: 601px) and (max-width: 900px) {
+    nav ul li {
+        margin: 0 var(--space-sm);
+    }
+}
+
+/* Desktops (901px and up) */
+@media (min-width: 901px) {
+    header {
+        padding: var(--space-lg) var(--space-xl);
+    }
+
+    nav ul li {
+        margin: 0 var(--space-md);
+    }
+}
