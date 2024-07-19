@@ -1,0 +1,1 @@
+{"version":3,"sources":["scripts/customize.js"],"names":["console","log"],"mappings":"AAAAA,OAAO,CAACC,GAAG,CAAC,yCAAyC,CAAC","file":"customize.40cf5776.js","sourceRoot":"../src","sourcesContent":["console.log('customize script is loaded and running!');"]}
