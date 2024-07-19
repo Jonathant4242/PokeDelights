@@ -97,19 +97,80 @@ main {
     padding: var(--space-lg);
 }
 
+/* Base styles for gallery */
 .cake-gallery {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    gap: var(--space-md);
+    padding: var(--space-lg);
 }
 
-.cake-gallery div {
-    margin: var(--space-sm);
+.cake-gallery .gallery-item {
     border: 1px solid var(--secondary-color);
     background-color: var(--background-color);
     border-radius: var(--radius-sm);
     box-shadow: var(--shadow-md);
+    text-align: center;
 }
 
+.cake-gallery img {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-sm);
+}
+
+/* Small devices (phones, 600px and down) */
+@media (max-width: 600px) {
+    .cake-gallery {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
+
+/* Medium devices (tablets, 601px to 900px) */
+@media (min-width: 601px) and (max-width: 900px) {
+    .cake-gallery {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Large devices (desktops, 901px and up) */
+@media (min-width: 901px) {
+    .cake-gallery {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin: var(--space-lg) 0;
+}
+
+.pagination button {
+    margin: 0 var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--font-size-md);
+    border: 1px solid var(--secondary-color);
+    background-color: var(--primary-color);
+    color: var(--background-color);
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+}
+
+.pagination button:disabled {
+    background-color: var(--header-footer-bg-color);
+    cursor: not-allowed;
+}
+
+/* Search Bar Styles */
+#search-bar {
+    display: block;
+    width: 100%;
+    max-width: 400px;
+    margin: var(--space-lg) auto;
+    padding: var(--space-sm);
+    font-size: var(--font-size-md);
+    border: 1px solid var(--secondary-color);
+    border-radius: var(--radius-sm);
+}
 footer {
     background-color: var(--header-footer-bg-color);
     padding: var(--space-md) var(--space-lg);

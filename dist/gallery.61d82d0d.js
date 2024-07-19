@@ -118,7 +118,97 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
   return newRequire;
 })({"scripts/gallery.js":[function(require,module,exports) {
-console.log('Gallery script is loaded and running!');
+document.addEventListener('DOMContentLoaded', function () {
+  var gallery = document.getElementById('cake-gallery');
+  var prevBtn = document.getElementById('prev-btn');
+  var nextBtn = document.getElementById('next-btn');
+  var searchBar = document.getElementById('search-bar');
+  var cakeCount = 50;
+  var cakesPerPage = {
+    large: 10,
+    medium: 8,
+    small: 5
+  };
+  var currentPage = 1;
+  var searchQuery = '';
+
+  // Function to get the number of cakes per page based on screen size
+  function getCakesPerPage() {
+    if (window.innerWidth <= 600) return cakesPerPage.small;
+    if (window.innerWidth <= 900) return cakesPerPage.medium;
+    return cakesPerPage.large;
+  }
+
+  // Function to generate all cakes
+  function generateAllCakes() {
+    var allCakes = [];
+    for (var i = 1; i <= cakeCount; i++) {
+      var cake = {
+        id: i,
+        name: "Pok\xE9mon Cake ".concat(i),
+        imgSrc: 'https://via.placeholder.com/200x200'
+      };
+      allCakes.push(cake);
+    }
+    return allCakes;
+  }
+  var allCakes = generateAllCakes();
+
+  // Function to render cakes
+  function renderCakes() {
+    var cakesPerPage = getCakesPerPage();
+    var filteredCakes = allCakes.filter(function (cake) {
+      return cake.name.toLowerCase().includes(searchQuery.toLowerCase());
+    });
+    var start = (currentPage - 1) * cakesPerPage;
+    var end = start + cakesPerPage;
+    gallery.innerHTML = '';
+    for (var i = start; i < end && i < filteredCakes.length; i++) {
+      var galleryItem = document.createElement('div');
+      galleryItem.classList.add('gallery-item');
+      var img = document.createElement('img');
+      img.src = filteredCakes[i].imgSrc;
+      img.alt = filteredCakes[i].name;
+      var caption = document.createElement('p');
+      caption.textContent = filteredCakes[i].name;
+      galleryItem.appendChild(img);
+      galleryItem.appendChild(caption);
+      gallery.appendChild(galleryItem);
+    }
+    prevBtn.disabled = currentPage === 1;
+    nextBtn.disabled = currentPage * cakesPerPage >= filteredCakes.length;
+  }
+
+  // Event listeners for buttons
+  prevBtn.addEventListener('click', function () {
+    if (currentPage > 1) {
+      currentPage--;
+      renderCakes();
+    }
+  });
+  nextBtn.addEventListener('click', function () {
+    var cakesPerPage = getCakesPerPage();
+    if (currentPage * cakesPerPage < allCakes.filter(function (cake) {
+      return cake.name.toLowerCase().includes(searchQuery.toLowerCase());
+    }).length) {
+      currentPage++;
+      renderCakes();
+    }
+  });
+
+  // Event listener for search bar
+  searchBar.addEventListener('input', function (e) {
+    searchQuery = e.target.value;
+    currentPage = 1; // Reset to first page on new search
+    renderCakes();
+  });
+
+  // Initial render
+  renderCakes();
+
+  // Re-render on window resize to adjust number of cakes per page
+  window.addEventListener('resize', renderCakes);
+});
 },{}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -144,7 +234,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57329" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57537" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

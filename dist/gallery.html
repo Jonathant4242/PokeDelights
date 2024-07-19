@@ -1,38 +1,44 @@
-<!-- src/gallery.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Pokémon Cake Gallery</title>
-        <link rel="stylesheet" href="/styles.b61e60ae.css">
-    </head>
-    <body>
-        <header>
-            <div class="logo">
-                <img src="/logo.6023b87e.png" alt="PokeDelights Logo">
-            </div>
-            <h1>Pokémon Cake Gallery</h1>
-            <nav>
-                <ul>
-                    <li><a href="/index.html">Home</a></li>
-                    <li><a href="/gallery.html">Pokémon Cake Gallery</a></li>
-                    <li><a href="/customize.html">Cake Customization Tool</a></li>
-                </ul>
-            </nav>
-        </header>
-    
-        <main>
-            <!-- Gallery content goes here -->
-        </main>
-    
-        <footer>
-            <p>&copy;NOT a real business</p>
-        </footer>
-    
-        <script src="/gallery.61d82d0d.js"></script>
-    </body>
-    </html></head></html>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explore our gallery of Pokémon-themed cakes. Perfect for birthdays, celebrations, and any special occasion.">
+    <title>Pokémon Cake Gallery - PokeDelights</title>
+    <link rel="stylesheet" type="text/css" href="/styles.b61e60ae.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="/logo.6023b87e.png" alt="PokeDelights Logo">
+        </div>
+        <h1>PokeDelights</h1>
+        <nav>
+            <ul>
+                <li><a href="/index.html">Home</a></li>
+                <li><a href="/gallery.html">Pokémon Cake Gallery</a></li>
+                <li><a href="/customize.html">Cake Customization Tool</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Search Bar -->
+        <input type="text" id="search-bar" placeholder="Search cakes...">
+        
+        <!-- Gallery Content -->
+        <h2>Pokémon Cake Gallery</h2>
+        <div class="cake-gallery" id="cake-gallery"></div>
+        <div class="pagination">
+            <button id="prev-btn" disabled="">Previous</button>
+            <button id="next-btn">Next</button>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 PokeDelights. All rights reserved.</p>
+    </footer>
+
+    <script src="/gallery.61d82d0d.js"></script>
+</body>
+</html>
