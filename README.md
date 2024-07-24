@@ -42,7 +42,6 @@ Purpose
 Educational 
 
 References:
-Pokémon API, you can refer to several resources:
 
 PokéAPI Documentation: The official documentation for PokéAPI provides detailed information on how to access and use various endpoints of the API, including Pokémon data, abilities, types, and more.
 
