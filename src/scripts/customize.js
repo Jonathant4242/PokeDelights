@@ -1,6 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const pokemonFlavorSelect = document.getElementById('pokemon-flavor');
-    const pokemonStampSelect = document.getElementById('pokemon-stamp');
+    const primaryFrostingInput = document.getElementById('primary-frosting');
+    const secondaryFrostingInput = document.getElementById('secondary-frosting');
+    const primaryColorDisplay = document.getElementById('primary-color-display');
+    const secondaryColorDisplay = document.getElementById('secondary-color-display');
+    const primaryColorRGB = document.getElementById('primary-color-rgb');
+    const secondaryColorRGB = document.getElementById('secondary-color-rgb');
     const cakeBaseSelect = document.getElementById('cake-base');
     const pokeballSelect = document.getElementById('pokeball');
     const fontSelect = document.getElementById('font');
@@ -16,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const pokemonList = document.getElementById('pokemon-list');
     const pokemonTypeSelect = document.getElementById('pokemon-type');
     const pokemonImageContainer = document.getElementById('pokemon-image-container');
+    const pokemonStampCheckboxes = document.querySelectorAll('#pokemon-stamp input[type="checkbox"]');
 
     let allPokemon = [];
 
@@ -75,8 +80,14 @@ document.addEventListener('DOMContentLoaded', () => {
         updatePokemonList(filteredPokemon);
     }
 
-    pokemonSearch.addEventListener('input', filterPokemon);
+    function updateColorDisplay() {
+        primaryColorDisplay.style.backgroundColor = primaryFrostingInput.value;
+        primaryColorRGB.textContent = primaryFrostingInput.value;
+        secondaryColorDisplay.style.backgroundColor = secondaryFrostingInput.value;
+        secondaryColorRGB.textContent = secondaryFrostingInput.value;
+    }
 
+    pokemonSearch.addEventListener('input', filterPokemon);
     pokemonTypeSelect.addEventListener('change', filterPokemon);
 
     pokemonList.addEventListener('change', () => {
@@ -85,18 +96,24 @@ document.addEventListener('DOMContentLoaded', () => {
         displayPokemonImage(selectedPokemonData);
     });
 
+    primaryFrostingInput.addEventListener('input', updateColorDisplay);
+    secondaryFrostingInput.addEventListener('input', updateColorDisplay);
+
+    // Initial color display update
+    updateColorDisplay();
+
     function calculateTotalPrice() {
         let totalPrice = 0;
 
         const selectedCakeBase = cakeBaseSelect.options[cakeBaseSelect.selectedIndex];
-        const selectedPokemonFlavor = pokemonFlavorSelect.options[pokemonFlavorSelect.selectedIndex];
         const selectedPokeball = pokeballSelect.options[pokeballSelect.selectedIndex];
-        const selectedPokemonStamp = pokemonStampSelect.options[pokemonStampSelect.selectedIndex];
+        const selectedPokemonStamps = Array.from(pokemonStampCheckboxes).filter(cb => cb.checked);
 
         totalPrice += parseFloat(selectedCakeBase.dataset.price);
-        totalPrice += parseFloat(selectedPokemonFlavor.dataset.price);
         totalPrice += parseFloat(selectedPokeball.dataset.price);
-        totalPrice += parseFloat(selectedPokemonStamp.dataset.price);
+        selectedPokemonStamps.forEach(stamp => {
+            totalPrice += parseFloat(stamp.dataset.price);
+        });
 
         const message = getCurrentMessage().replace(/_/g, '');
         if (message.length > 20) {
