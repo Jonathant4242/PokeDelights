@@ -124,6 +124,8 @@ document.addEventListener('DOMContentLoaded', function () {
   if (registrationForm) {
     registrationForm.addEventListener('submit', function (event) {
       event.preventDefault();
+
+      // Collect user data from the registration form
       var user = {
         firstName: this['first-name'].value,
         lastName: this['last-name'].value,
@@ -136,8 +138,12 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         savedCakes: [] // Initialize with an empty array
       };
+
+      // Store user data in localStorage
       localStorage.setItem('user_' + user.email, JSON.stringify(user));
       alert('Registration successful!');
+
+      // Redirect to the dashboard page after successful registration
       window.location.href = './dashboard.html';
     });
   }
@@ -147,9 +153,15 @@ document.addEventListener('DOMContentLoaded', function () {
   if (loginForm) {
     loginForm.addEventListener('submit', function (event) {
       event.preventDefault();
+
+      // Collect login data from the login form
       var email = this['email'].value;
       var password = this['password'].value;
+
+      // Retrieve stored user data from localStorage
       var storedUser = JSON.parse(localStorage.getItem('user_' + email));
+
+      // Check if stored user exists and password matches
       if (storedUser && password === 'password') {
         // For simplicity, checking against a static password
         localStorage.setItem('loggedInUser', JSON.stringify(storedUser));
@@ -166,6 +178,7 @@ document.addEventListener('DOMContentLoaded', function () {
   if (logoutLink) {
     logoutLink.addEventListener('click', function (event) {
       event.preventDefault();
+      // Remove logged-in user data from localStorage
       localStorage.removeItem('loggedInUser');
       window.location.href = './index.html';
     });
@@ -176,10 +189,12 @@ document.addEventListener('DOMContentLoaded', function () {
   var loginLink = document.getElementById('login-link');
   var dashboardLink = document.getElementById('dashboard-link');
   if (loggedInUser) {
+    // Hide the login link and show the dashboard and logout links
     if (loginLink) loginLink.style.display = 'none';
     if (dashboardLink) dashboardLink.style.display = 'inline';
     if (logoutLink) logoutLink.style.display = 'inline';
   } else {
+    // Show the login link and hide the dashboard and logout links
     if (loginLink) loginLink.style.display = 'inline';
     if (dashboardLink) dashboardLink.style.display = 'none';
     if (logoutLink) logoutLink.style.display = 'none';
@@ -210,7 +225,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64896" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49255" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

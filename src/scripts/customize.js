@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Get references to various elements in the form
     const primaryFrostingInput = document.getElementById('primary-frosting');
     const secondaryFrostingInput = document.getElementById('secondary-frosting');
     const primaryColorDisplay = document.getElementById('primary-color-display');
@@ -24,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let allPokemon = [];
 
+    // Fetch and populate Pokémon types
     fetch('https://pokeapi.co/api/v2/type')
         .then(response => response.json())
         .then(data => {
@@ -36,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(error => console.error('Error fetching Pokémon types:', error));
 
+    // Fetch and populate Pokémon list
     fetch('https://pokeapi.co/api/v2/pokemon?limit=151')
         .then(response => response.json())
         .then(data => {
@@ -47,6 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(error => console.error('Error fetching Pokémon:', error));
 
+    // Update Pokémon list based on fetched data
     function updatePokemonList(pokemon) {
         pokemonList.innerHTML = '';
         pokemon.forEach(p => {
@@ -58,10 +62,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Display selected Pokémon image
     function displayPokemonImage(pokemon) {
         pokemonImageContainer.innerHTML = `<img src="${pokemon.sprites.front_default}" alt="${pokemon.name}">`;
     }
 
+    // Filter Pokémon based on search query and selected types
     function filterPokemon() {
         let filteredPokemon = allPokemon;
 
@@ -80,6 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updatePokemonList(filteredPokemon);
     }
 
+    // Update the color display based on the selected frosting colors
     function updateColorDisplay() {
         primaryColorDisplay.style.backgroundColor = primaryFrostingInput.value;
         primaryColorRGB.textContent = primaryFrostingInput.value;
@@ -87,21 +94,25 @@ document.addEventListener('DOMContentLoaded', () => {
         secondaryColorRGB.textContent = secondaryFrostingInput.value;
     }
 
+    // Event listeners for filtering Pokémon
     pokemonSearch.addEventListener('input', filterPokemon);
     pokemonTypeSelect.addEventListener('change', filterPokemon);
 
+    // Event listener for displaying selected Pokémon image
     pokemonList.addEventListener('change', () => {
         const selectedPokemon = pokemonList.value;
         const selectedPokemonData = allPokemon.find(p => p.name === selectedPokemon);
         displayPokemonImage(selectedPokemonData);
     });
 
+    // Event listeners for updating color display
     primaryFrostingInput.addEventListener('input', updateColorDisplay);
     secondaryFrostingInput.addEventListener('input', updateColorDisplay);
 
     // Initial color display update
     updateColorDisplay();
 
+    // Calculate total price based on selected options
     function calculateTotalPrice() {
         let totalPrice = 0;
 
@@ -123,10 +134,12 @@ document.addEventListener('DOMContentLoaded', () => {
         totalPriceDiv.textContent = `Total Price: $${totalPrice}`;
     }
 
+    // Get the current custom message
     function getCurrentMessage() {
         return messageShort.style.display === 'none' ? messageLong.value : messageShort.value;
     }
 
+    // Format the custom message to fit within line limits
     function formatMessage(text, maxLineLength) {
         let lines = [];
         let line = '';
@@ -148,17 +161,20 @@ document.addEventListener('DOMContentLoaded', () => {
         return lines.join('_');
     }
 
+    // Handle input for formatting custom message
     function handleInput(event) {
         const maxLineLength = event.target.id === 'message-short' ? 15 : 20;
         const formattedMessage = formatMessage(event.target.value, maxLineLength);
         event.target.value = formattedMessage;
     }
 
+    // Preview the custom message
     function previewMessage() {
         const message = getCurrentMessage().replace(/_/g, '\n');
         messagePreview.innerHTML = `<pre style="font-family: ${fontSelect.value};">${message}</pre>`;
     }
 
+    // Event listeners for custom message length options
     messageLengthRadios.forEach(radio => {
         radio.addEventListener('change', () => {
             if (radio.value === 'short') {
@@ -172,15 +188,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Event listeners for custom message input
     messageShort.addEventListener('input', handleInput);
     messageLong.addEventListener('input', handleInput);
 
+    // Event listener for form changes to recalculate the total price
     form.addEventListener('change', calculateTotalPrice);
+
+    // Event listener for preview button
     previewButton.addEventListener('click', () => {
         previewMessage();
         calculateTotalPrice();
     });
 
+    // Event listener for purchase button
     purchaseButton.addEventListener('click', () => {
         const message = getCurrentMessage();
         if (message.length > 50) {
@@ -193,11 +214,13 @@ document.addEventListener('DOMContentLoaded', () => {
         // Handle the purchase action here
     });
 
+    // Event listener for form submission to save custom cake
     form.addEventListener('submit', (event) => {
         event.preventDefault();
         alert('Custom cake saved!');
         // Save the custom cake details to localStorage or handle submission here
     });
 
-    calculateTotalPrice(); // Initial calculation
+    // Initial total price calculation
+    calculateTotalPrice();
 });
