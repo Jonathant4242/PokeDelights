@@ -55,8 +55,6 @@ YouTube Tutorials: Searching for "Pokémon API tutorial" on YouTube can provide 
 
 https://javascript.info/
 
-WDD330 asgined 
-
 WDD330 assigned readings 
 
 BYU-I
