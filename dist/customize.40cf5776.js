@@ -119,8 +119,12 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   return newRequire;
 })({"scripts/customize.js":[function(require,module,exports) {
 document.addEventListener('DOMContentLoaded', function () {
-  var pokemonFlavorSelect = document.getElementById('pokemon-flavor');
-  var pokemonStampSelect = document.getElementById('pokemon-stamp');
+  var primaryFrostingInput = document.getElementById('primary-frosting');
+  var secondaryFrostingInput = document.getElementById('secondary-frosting');
+  var primaryColorDisplay = document.getElementById('primary-color-display');
+  var secondaryColorDisplay = document.getElementById('secondary-color-display');
+  var primaryColorRGB = document.getElementById('primary-color-rgb');
+  var secondaryColorRGB = document.getElementById('secondary-color-rgb');
   var cakeBaseSelect = document.getElementById('cake-base');
   var pokeballSelect = document.getElementById('pokeball');
   var fontSelect = document.getElementById('font');
@@ -136,6 +140,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var pokemonList = document.getElementById('pokemon-list');
   var pokemonTypeSelect = document.getElementById('pokemon-type');
   var pokemonImageContainer = document.getElementById('pokemon-image-container');
+  var pokemonStampCheckboxes = document.querySelectorAll('#pokemon-stamp input[type="checkbox"]');
   var allPokemon = [];
   fetch('https://pokeapi.co/api/v2/type').then(function (response) {
     return response.json();
@@ -199,6 +204,12 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     updatePokemonList(filteredPokemon);
   }
+  function updateColorDisplay() {
+    primaryColorDisplay.style.backgroundColor = primaryFrostingInput.value;
+    primaryColorRGB.textContent = primaryFrostingInput.value;
+    secondaryColorDisplay.style.backgroundColor = secondaryFrostingInput.value;
+    secondaryColorRGB.textContent = secondaryFrostingInput.value;
+  }
   pokemonSearch.addEventListener('input', filterPokemon);
   pokemonTypeSelect.addEventListener('change', filterPokemon);
   pokemonList.addEventListener('change', function () {
@@ -208,16 +219,23 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     displayPokemonImage(selectedPokemonData);
   });
+  primaryFrostingInput.addEventListener('input', updateColorDisplay);
+  secondaryFrostingInput.addEventListener('input', updateColorDisplay);
+
+  // Initial color display update
+  updateColorDisplay();
   function calculateTotalPrice() {
     var totalPrice = 0;
     var selectedCakeBase = cakeBaseSelect.options[cakeBaseSelect.selectedIndex];
-    var selectedPokemonFlavor = pokemonFlavorSelect.options[pokemonFlavorSelect.selectedIndex];
     var selectedPokeball = pokeballSelect.options[pokeballSelect.selectedIndex];
-    var selectedPokemonStamp = pokemonStampSelect.options[pokemonStampSelect.selectedIndex];
+    var selectedPokemonStamps = Array.from(pokemonStampCheckboxes).filter(function (cb) {
+      return cb.checked;
+    });
     totalPrice += parseFloat(selectedCakeBase.dataset.price);
-    totalPrice += parseFloat(selectedPokemonFlavor.dataset.price);
     totalPrice += parseFloat(selectedPokeball.dataset.price);
-    totalPrice += parseFloat(selectedPokemonStamp.dataset.price);
+    selectedPokemonStamps.forEach(function (stamp) {
+      totalPrice += parseFloat(stamp.dataset.price);
+    });
     var message = getCurrentMessage().replace(/_/g, '');
     if (message.length > 20) {
       totalPrice += message.length - 20; // $1 per letter after the first 20 characters
