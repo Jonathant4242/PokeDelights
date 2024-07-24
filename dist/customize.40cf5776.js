@@ -118,7 +118,179 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
   return newRequire;
 })({"scripts/customize.js":[function(require,module,exports) {
-console.log('customize script is loaded and running!');
+document.addEventListener('DOMContentLoaded', function () {
+  var pokemonFlavorSelect = document.getElementById('pokemon-flavor');
+  var pokemonStampSelect = document.getElementById('pokemon-stamp');
+  var cakeBaseSelect = document.getElementById('cake-base');
+  var pokeballSelect = document.getElementById('pokeball');
+  var fontSelect = document.getElementById('font');
+  var messageShort = document.getElementById('message-short');
+  var messageLong = document.getElementById('message-long');
+  var previewButton = document.getElementById('preview-button');
+  var purchaseButton = document.getElementById('purchase-button');
+  var messagePreview = document.getElementById('message-preview');
+  var form = document.getElementById('custom-cake-form');
+  var totalPriceDiv = document.getElementById('total-price');
+  var messageLengthRadios = document.getElementsByName('message-length');
+  var pokemonSearch = document.getElementById('pokemon-search');
+  var pokemonList = document.getElementById('pokemon-list');
+  var pokemonTypeSelect = document.getElementById('pokemon-type');
+  var pokemonImageContainer = document.getElementById('pokemon-image-container');
+  var allPokemon = [];
+  fetch('https://pokeapi.co/api/v2/type').then(function (response) {
+    return response.json();
+  }).then(function (data) {
+    data.results.forEach(function (type) {
+      var option = document.createElement('option');
+      option.value = type.name;
+      option.textContent = type.name.charAt(0).toUpperCase() + type.name.slice(1);
+      pokemonTypeSelect.appendChild(option);
+    });
+  }).catch(function (error) {
+    return console.error('Error fetching Pokémon types:', error);
+  });
+  fetch('https://pokeapi.co/api/v2/pokemon?limit=151').then(function (response) {
+    return response.json();
+  }).then(function (data) {
+    var promises = data.results.map(function (pokemon) {
+      return fetch(pokemon.url).then(function (res) {
+        return res.json();
+      });
+    });
+    Promise.all(promises).then(function (pokemonData) {
+      allPokemon = pokemonData;
+      updatePokemonList(allPokemon);
+    });
+  }).catch(function (error) {
+    return console.error('Error fetching Pokémon:', error);
+  });
+  function updatePokemonList(pokemon) {
+    pokemonList.innerHTML = '';
+    pokemon.forEach(function (p) {
+      var option = document.createElement('option');
+      option.value = p.name;
+      option.textContent = p.name.charAt(0).toUpperCase() + p.name.slice(1);
+      option.dataset.url = p.sprites.front_default;
+      pokemonList.appendChild(option);
+    });
+  }
+  function displayPokemonImage(pokemon) {
+    pokemonImageContainer.innerHTML = "<img src=\"".concat(pokemon.sprites.front_default, "\" alt=\"").concat(pokemon.name, "\">");
+  }
+  function filterPokemon() {
+    var filteredPokemon = allPokemon;
+    var searchQuery = pokemonSearch.value.toLowerCase().trim();
+    if (searchQuery) {
+      filteredPokemon = filteredPokemon.filter(function (p) {
+        return p.name.includes(searchQuery);
+      });
+    }
+    var selectedTypes = Array.from(pokemonTypeSelect.selectedOptions).map(function (option) {
+      return option.value;
+    });
+    if (selectedTypes.length > 0) {
+      filteredPokemon = filteredPokemon.filter(function (p) {
+        return selectedTypes.every(function (type) {
+          return p.types.some(function (t) {
+            return t.type.name === type;
+          });
+        });
+      });
+    }
+    updatePokemonList(filteredPokemon);
+  }
+  pokemonSearch.addEventListener('input', filterPokemon);
+  pokemonTypeSelect.addEventListener('change', filterPokemon);
+  pokemonList.addEventListener('change', function () {
+    var selectedPokemon = pokemonList.value;
+    var selectedPokemonData = allPokemon.find(function (p) {
+      return p.name === selectedPokemon;
+    });
+    displayPokemonImage(selectedPokemonData);
+  });
+  function calculateTotalPrice() {
+    var totalPrice = 0;
+    var selectedCakeBase = cakeBaseSelect.options[cakeBaseSelect.selectedIndex];
+    var selectedPokemonFlavor = pokemonFlavorSelect.options[pokemonFlavorSelect.selectedIndex];
+    var selectedPokeball = pokeballSelect.options[pokeballSelect.selectedIndex];
+    var selectedPokemonStamp = pokemonStampSelect.options[pokemonStampSelect.selectedIndex];
+    totalPrice += parseFloat(selectedCakeBase.dataset.price);
+    totalPrice += parseFloat(selectedPokemonFlavor.dataset.price);
+    totalPrice += parseFloat(selectedPokeball.dataset.price);
+    totalPrice += parseFloat(selectedPokemonStamp.dataset.price);
+    var message = getCurrentMessage().replace(/_/g, '');
+    if (message.length > 20) {
+      totalPrice += message.length - 20; // $1 per letter after the first 20 characters
+    }
+    totalPriceDiv.textContent = "Total Price: $".concat(totalPrice);
+  }
+  function getCurrentMessage() {
+    return messageShort.style.display === 'none' ? messageLong.value : messageShort.value;
+  }
+  function formatMessage(text, maxLineLength) {
+    var lines = [];
+    var line = '';
+    for (var i = 0; i < text.length; i++) {
+      if (text[i] === '_') {
+        lines.push(line);
+        line = '';
+      } else {
+        if (line.length >= maxLineLength) {
+          lines.push(line);
+          line = '';
+        }
+        line += text[i];
+      }
+    }
+    if (line.length > 0) lines.push(line);
+    return lines.join('_');
+  }
+  function handleInput(event) {
+    var maxLineLength = event.target.id === 'message-short' ? 15 : 20;
+    var formattedMessage = formatMessage(event.target.value, maxLineLength);
+    event.target.value = formattedMessage;
+  }
+  function previewMessage() {
+    var message = getCurrentMessage().replace(/_/g, '\n');
+    messagePreview.innerHTML = "<pre style=\"font-family: ".concat(fontSelect.value, ";\">").concat(message, "</pre>");
+  }
+  messageLengthRadios.forEach(function (radio) {
+    radio.addEventListener('change', function () {
+      if (radio.value === 'short') {
+        messageShort.style.display = 'block';
+        messageLong.style.display = 'none';
+      } else {
+        messageShort.style.display = 'none';
+        messageLong.style.display = 'block';
+      }
+      calculateTotalPrice();
+    });
+  });
+  messageShort.addEventListener('input', handleInput);
+  messageLong.addEventListener('input', handleInput);
+  form.addEventListener('change', calculateTotalPrice);
+  previewButton.addEventListener('click', function () {
+    previewMessage();
+    calculateTotalPrice();
+  });
+  purchaseButton.addEventListener('click', function () {
+    var message = getCurrentMessage();
+    if (message.length > 50) {
+      var confirmPurchase = confirm('You have exceeded the recommended text length. Do you agree to proceed?');
+      if (!confirmPurchase) {
+        return;
+      }
+    }
+    alert('Purchase complete!');
+    // Handle the purchase action here
+  });
+  form.addEventListener('submit', function (event) {
+    event.preventDefault();
+    alert('Custom cake saved!');
+    // Save the custom cake details to localStorage or handle submission here
+  });
+  calculateTotalPrice(); // Initial calculation
+});
 },{}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -144,7 +316,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57537" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54798" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];
