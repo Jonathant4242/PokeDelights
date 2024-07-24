@@ -117,99 +117,58 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"scripts/gallery.js":[function(require,module,exports) {
-document.addEventListener('DOMContentLoaded', function () {
-  var gallery = document.getElementById('cake-gallery');
-  var prevBtn = document.getElementById('prev-btn');
-  var nextBtn = document.getElementById('next-btn');
-  var searchBar = document.getElementById('search-bar');
-  var cakeCount = 50;
-  var cakesPerPage = {
-    large: 10,
-    medium: 8,
-    small: 5
+})({"../node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
+var bundleURL = null;
+function getBundleURLCached() {
+  if (!bundleURL) {
+    bundleURL = getBundleURL();
+  }
+  return bundleURL;
+}
+function getBundleURL() {
+  // Attempt to find the URL of the current script and use that as the base URL
+  try {
+    throw new Error();
+  } catch (err) {
+    var matches = ('' + err.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\/\/[^)\n]+/g);
+    if (matches) {
+      return getBaseURL(matches[0]);
+    }
+  }
+  return '/';
+}
+function getBaseURL(url) {
+  return ('' + url).replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\/\/.+)?\/[^/]+(?:\?.*)?$/, '$1') + '/';
+}
+exports.getBundleURL = getBundleURLCached;
+exports.getBaseURL = getBaseURL;
+},{}],"../node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
+var bundle = require('./bundle-url');
+function updateLink(link) {
+  var newLink = link.cloneNode();
+  newLink.onload = function () {
+    link.remove();
   };
-  var currentPage = 1;
-  var searchQuery = '';
-
-  // Function to get the number of cakes per page based on screen size
-  function getCakesPerPage() {
-    if (window.innerWidth <= 600) return cakesPerPage.small;
-    if (window.innerWidth <= 900) return cakesPerPage.medium;
-    return cakesPerPage.large;
+  newLink.href = link.href.split('?')[0] + '?' + Date.now();
+  link.parentNode.insertBefore(newLink, link.nextSibling);
+}
+var cssTimeout = null;
+function reloadCSS() {
+  if (cssTimeout) {
+    return;
   }
-
-  // Function to generate all cakes
-  function generateAllCakes() {
-    var allCakes = [];
-    for (var i = 1; i <= cakeCount; i++) {
-      var cake = {
-        id: i,
-        name: "Pok\xE9mon Cake ".concat(i),
-        imgSrc: 'https://via.placeholder.com/200x200'
-      };
-      allCakes.push(cake);
+  cssTimeout = setTimeout(function () {
+    var links = document.querySelectorAll('link[rel="stylesheet"]');
+    for (var i = 0; i < links.length; i++) {
+      if (bundle.getBaseURL(links[i].href) === bundle.getBundleURL()) {
+        updateLink(links[i]);
+      }
     }
-    return allCakes;
-  }
-  var allCakes = generateAllCakes();
-
-  // Function to render cakes
-  function renderCakes() {
-    var cakesPerPage = getCakesPerPage();
-    var filteredCakes = allCakes.filter(function (cake) {
-      return cake.name.toLowerCase().includes(searchQuery.toLowerCase());
-    });
-    var start = (currentPage - 1) * cakesPerPage;
-    var end = start + cakesPerPage;
-    gallery.innerHTML = '';
-    for (var i = start; i < end && i < filteredCakes.length; i++) {
-      var galleryItem = document.createElement('div');
-      galleryItem.classList.add('gallery-item');
-      var img = document.createElement('img');
-      img.src = filteredCakes[i].imgSrc;
-      img.alt = filteredCakes[i].name;
-      var caption = document.createElement('p');
-      caption.textContent = filteredCakes[i].name;
-      galleryItem.appendChild(img);
-      galleryItem.appendChild(caption);
-      gallery.appendChild(galleryItem);
-    }
-    prevBtn.disabled = currentPage === 1;
-    nextBtn.disabled = currentPage * cakesPerPage >= filteredCakes.length;
-  }
-
-  // Event listeners for buttons
-  prevBtn.addEventListener('click', function () {
-    if (currentPage > 1) {
-      currentPage--;
-      renderCakes();
-    }
-  });
-  nextBtn.addEventListener('click', function () {
-    var cakesPerPage = getCakesPerPage();
-    if (currentPage * cakesPerPage < allCakes.filter(function (cake) {
-      return cake.name.toLowerCase().includes(searchQuery.toLowerCase());
-    }).length) {
-      currentPage++;
-      renderCakes();
-    }
-  });
-
-  // Event listener for search bar
-  searchBar.addEventListener('input', function (e) {
-    searchQuery = e.target.value;
-    currentPage = 1; // Reset to first page on new search
-    renderCakes();
-  });
-
-  // Initial render
-  renderCakes();
-
-  // Re-render on window resize to adjust number of cakes per page
-  window.addEventListener('resize', renderCakes);
-});
-},{}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+    cssTimeout = null;
+  }, 50);
+}
+module.exports = reloadCSS;
+},{"./bundle-url":"../node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -378,5 +337,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","scripts/gallery.js"], null)
-//# sourceMappingURL=/gallery.61d82d0d.js.map
+},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js"], null)
+//# sourceMappingURL=/index.js.map
