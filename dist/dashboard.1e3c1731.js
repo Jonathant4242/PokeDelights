@@ -117,98 +117,54 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"scripts/gallery.js":[function(require,module,exports) {
+})({"scripts/dashboard.js":[function(require,module,exports) {
 document.addEventListener('DOMContentLoaded', function () {
-  var gallery = document.getElementById('cake-gallery');
-  var prevBtn = document.getElementById('prev-btn');
-  var nextBtn = document.getElementById('next-btn');
-  var searchBar = document.getElementById('search-bar');
-  var cakeCount = 50;
-  var cakesPerPage = {
-    large: 10,
-    medium: 8,
-    small: 5
-  };
-  var currentPage = 1;
-  var searchQuery = '';
-
-  // Function to get the number of cakes per page based on screen size
-  function getCakesPerPage() {
-    if (window.innerWidth <= 600) return cakesPerPage.small;
-    if (window.innerWidth <= 900) return cakesPerPage.medium;
-    return cakesPerPage.large;
+  var user = JSON.parse(localStorage.getItem('loggedInUser'));
+  var userFirstNameSpan = document.getElementById('user-first-name');
+  var form = document.getElementById('dashboard-form');
+  if (user) {
+    userFirstNameSpan.textContent = user.firstName;
+    form['first-name'].value = user.firstName;
+    form['last-name'].value = user.lastName;
+    form['email'].value = user.email;
+    form['address'].value = user.address;
+    form['card-number'].value = user.creditCard.cardNumber;
+    form['expire-date'].value = user.creditCard.expireDate;
+    form['cvv'].value = user.creditCard.cvv;
+  } else {
+    alert('No user data found. Please log in.');
+    window.location.href = './login.html';
   }
+  form.addEventListener('submit', function (event) {
+    event.preventDefault();
+    user.firstName = form['first-name'].value;
+    user.lastName = form['last-name'].value;
+    user.email = form['email'].value;
+    user.address = form['address'].value;
+    user.creditCard.cardNumber = form['card-number'].value;
+    user.creditCard.expireDate = form['expire-date'].value;
+    user.creditCard.cvv = form['cvv'].value;
+    localStorage.setItem('loggedInUser', JSON.stringify(user));
+    localStorage.setItem(user.email, JSON.stringify(user));
+    alert('Information updated successfully!');
+  });
 
-  // Function to generate all cakes
-  function generateAllCakes() {
-    var allCakes = [];
-    for (var i = 1; i <= cakeCount; i++) {
-      var cake = {
-        id: i,
-        name: "Pok\xE9mon Cake ".concat(i),
-        imgSrc: 'https://via.placeholder.com/200x200'
-      };
-      allCakes.push(cake);
-    }
-    return allCakes;
-  }
-  var allCakes = generateAllCakes();
-
-  // Function to render cakes
-  function renderCakes() {
-    var cakesPerPage = getCakesPerPage();
-    var filteredCakes = allCakes.filter(function (cake) {
-      return cake.name.toLowerCase().includes(searchQuery.toLowerCase());
+  // Display saved cakes if any
+  var savedCakesContainer = document.getElementById('saved-cakes');
+  if (user.savedCakes.length > 0) {
+    user.savedCakes.forEach(function (cake, index) {
+      var cakeDiv = document.createElement('div');
+      cakeDiv.textContent = "Cake ".concat(index + 1, ": ").concat(JSON.stringify(cake));
+      savedCakesContainer.appendChild(cakeDiv);
     });
-    var start = (currentPage - 1) * cakesPerPage;
-    var end = start + cakesPerPage;
-    gallery.innerHTML = '';
-    for (var i = start; i < end && i < filteredCakes.length; i++) {
-      var galleryItem = document.createElement('div');
-      galleryItem.classList.add('gallery-item');
-      var img = document.createElement('img');
-      img.src = filteredCakes[i].imgSrc;
-      img.alt = filteredCakes[i].name;
-      var caption = document.createElement('p');
-      caption.textContent = filteredCakes[i].name;
-      galleryItem.appendChild(img);
-      galleryItem.appendChild(caption);
-      gallery.appendChild(galleryItem);
-    }
-    prevBtn.disabled = currentPage === 1;
-    nextBtn.disabled = currentPage * cakesPerPage >= filteredCakes.length;
+  } else {
+    savedCakesContainer.textContent = 'No saved cakes.';
   }
-
-  // Event listeners for buttons
-  prevBtn.addEventListener('click', function () {
-    if (currentPage > 1) {
-      currentPage--;
-      renderCakes();
-    }
-  });
-  nextBtn.addEventListener('click', function () {
-    var cakesPerPage = getCakesPerPage();
-    if (currentPage * cakesPerPage < allCakes.filter(function (cake) {
-      return cake.name.toLowerCase().includes(searchQuery.toLowerCase());
-    }).length) {
-      currentPage++;
-      renderCakes();
-    }
-  });
-
-  // Event listener for search bar
-  searchBar.addEventListener('input', function (e) {
-    searchQuery = e.target.value;
-    currentPage = 1; // Reset to first page on new search
-    renderCakes();
-  });
-
-  // Initial render
-  renderCakes();
-
-  // Re-render on window resize to adjust number of cakes per page
-  window.addEventListener('resize', renderCakes);
 });
+function logout() {
+  localStorage.removeItem('loggedInUser');
+  window.location.href = './index.html';
+}
 },{}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -378,5 +334,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","scripts/gallery.js"], null)
-//# sourceMappingURL=/gallery.61d82d0d.js.map
+},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","scripts/dashboard.js"], null)
+//# sourceMappingURL=/dashboard.1e3c1731.js.map

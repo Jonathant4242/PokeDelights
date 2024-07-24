@@ -117,97 +117,73 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"scripts/gallery.js":[function(require,module,exports) {
+})({"scripts/login.js":[function(require,module,exports) {
 document.addEventListener('DOMContentLoaded', function () {
-  var gallery = document.getElementById('cake-gallery');
-  var prevBtn = document.getElementById('prev-btn');
-  var nextBtn = document.getElementById('next-btn');
-  var searchBar = document.getElementById('search-bar');
-  var cakeCount = 50;
-  var cakesPerPage = {
-    large: 10,
-    medium: 8,
-    small: 5
-  };
-  var currentPage = 1;
-  var searchQuery = '';
-
-  // Function to get the number of cakes per page based on screen size
-  function getCakesPerPage() {
-    if (window.innerWidth <= 600) return cakesPerPage.small;
-    if (window.innerWidth <= 900) return cakesPerPage.medium;
-    return cakesPerPage.large;
-  }
-
-  // Function to generate all cakes
-  function generateAllCakes() {
-    var allCakes = [];
-    for (var i = 1; i <= cakeCount; i++) {
-      var cake = {
-        id: i,
-        name: "Pok\xE9mon Cake ".concat(i),
-        imgSrc: 'https://via.placeholder.com/200x200'
+  // Registration form handler
+  var registrationForm = document.getElementById('registration-form');
+  if (registrationForm) {
+    registrationForm.addEventListener('submit', function (event) {
+      event.preventDefault();
+      var user = {
+        firstName: this['first-name'].value,
+        lastName: this['last-name'].value,
+        email: this['email'].value,
+        address: this['address'].value,
+        creditCard: {
+          cardNumber: this['card-number'].value,
+          expireDate: this['expire-date'].value,
+          cvv: this['cvv'].value
+        },
+        savedCakes: [] // Initialize with an empty array
       };
-      allCakes.push(cake);
-    }
-    return allCakes;
-  }
-  var allCakes = generateAllCakes();
-
-  // Function to render cakes
-  function renderCakes() {
-    var cakesPerPage = getCakesPerPage();
-    var filteredCakes = allCakes.filter(function (cake) {
-      return cake.name.toLowerCase().includes(searchQuery.toLowerCase());
+      localStorage.setItem('user_' + user.email, JSON.stringify(user));
+      alert('Registration successful!');
+      window.location.href = './dashboard.html';
     });
-    var start = (currentPage - 1) * cakesPerPage;
-    var end = start + cakesPerPage;
-    gallery.innerHTML = '';
-    for (var i = start; i < end && i < filteredCakes.length; i++) {
-      var galleryItem = document.createElement('div');
-      galleryItem.classList.add('gallery-item');
-      var img = document.createElement('img');
-      img.src = filteredCakes[i].imgSrc;
-      img.alt = filteredCakes[i].name;
-      var caption = document.createElement('p');
-      caption.textContent = filteredCakes[i].name;
-      galleryItem.appendChild(img);
-      galleryItem.appendChild(caption);
-      gallery.appendChild(galleryItem);
-    }
-    prevBtn.disabled = currentPage === 1;
-    nextBtn.disabled = currentPage * cakesPerPage >= filteredCakes.length;
   }
 
-  // Event listeners for buttons
-  prevBtn.addEventListener('click', function () {
-    if (currentPage > 1) {
-      currentPage--;
-      renderCakes();
-    }
-  });
-  nextBtn.addEventListener('click', function () {
-    var cakesPerPage = getCakesPerPage();
-    if (currentPage * cakesPerPage < allCakes.filter(function (cake) {
-      return cake.name.toLowerCase().includes(searchQuery.toLowerCase());
-    }).length) {
-      currentPage++;
-      renderCakes();
-    }
-  });
+  // Login form handler
+  var loginForm = document.getElementById('login-form');
+  if (loginForm) {
+    loginForm.addEventListener('submit', function (event) {
+      event.preventDefault();
+      var email = this['email'].value;
+      var password = this['password'].value;
+      var storedUser = JSON.parse(localStorage.getItem('user_' + email));
+      if (storedUser && password === 'password') {
+        // For simplicity, checking against a static password
+        localStorage.setItem('loggedInUser', JSON.stringify(storedUser));
+        alert('Login successful!');
+        window.location.href = './dashboard.html';
+      } else {
+        alert('Invalid email or password.');
+      }
+    });
+  }
 
-  // Event listener for search bar
-  searchBar.addEventListener('input', function (e) {
-    searchQuery = e.target.value;
-    currentPage = 1; // Reset to first page on new search
-    renderCakes();
-  });
+  // Handle logout functionality
+  var logoutLink = document.getElementById('logout-link');
+  if (logoutLink) {
+    logoutLink.addEventListener('click', function (event) {
+      event.preventDefault();
+      localStorage.removeItem('loggedInUser');
+      window.location.href = './index.html';
+    });
+  }
 
-  // Initial render
-  renderCakes();
-
-  // Re-render on window resize to adjust number of cakes per page
-  window.addEventListener('resize', renderCakes);
+  // Display the correct navigation links based on login status
+  var loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+  var loginLink = document.getElementById('login-link');
+  var dashboardLink = document.getElementById('dashboard-link');
+  if (loggedInUser) {
+    if (loginLink) loginLink.style.display = 'none';
+    if (dashboardLink) dashboardLink.style.display = 'inline';
+    if (logoutLink) logoutLink.style.display = 'inline';
+  } else {
+    if (loginLink) loginLink.style.display = 'inline';
+    if (dashboardLink) dashboardLink.style.display = 'none';
+    if (logoutLink) logoutLink.style.display = 'none';
+  }
 });
 },{}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
@@ -378,5 +354,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","scripts/gallery.js"], null)
-//# sourceMappingURL=/gallery.61d82d0d.js.map
+},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","scripts/login.js"], null)
+//# sourceMappingURL=/login.fee8b19f.js.map
