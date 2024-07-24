@@ -117,58 +117,70 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"../node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
-var bundleURL = null;
-function getBundleURLCached() {
-  if (!bundleURL) {
-    bundleURL = getBundleURL();
-  }
-  return bundleURL;
-}
-function getBundleURL() {
-  // Attempt to find the URL of the current script and use that as the base URL
-  try {
-    throw new Error();
-  } catch (err) {
-    var matches = ('' + err.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\/\/[^)\n]+/g);
-    if (matches) {
-      return getBaseURL(matches[0]);
+})({"scripts/checkoutAndSave.js":[function(require,module,exports) {
+document.addEventListener('DOMContentLoaded', function () {
+  var purchaseButton = document.getElementById('purchase-button');
+  var confirmPurchaseButton = document.getElementById('confirm-purchase-button');
+  var checkoutSection = document.getElementById('checkout-section');
+  var checkoutForm = document.getElementById('checkout-form');
+  var loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+  purchaseButton.addEventListener('click', function () {
+    if (loggedInUser) {
+      // Pre-fill checkout form with user data
+      checkoutForm['first-name'].value = loggedInUser.firstName;
+      checkoutForm['last-name'].value = loggedInUser.lastName;
+      checkoutForm['email'].value = loggedInUser.email;
+      checkoutForm['address'].value = loggedInUser.address;
+      checkoutForm['card-number'].value = loggedInUser.creditCard.cardNumber;
+      checkoutForm['expiry-date'].value = loggedInUser.creditCard.expiryDate;
+      checkoutForm['cvv'].value = loggedInUser.creditCard.cvv;
     }
-  }
-  return '/';
-}
-function getBaseURL(url) {
-  return ('' + url).replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\/\/.+)?\/[^/]+(?:\?.*)?$/, '$1') + '/';
-}
-exports.getBundleURL = getBundleURLCached;
-exports.getBaseURL = getBaseURL;
-},{}],"../node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
-var bundle = require('./bundle-url');
-function updateLink(link) {
-  var newLink = link.cloneNode();
-  newLink.onload = function () {
-    link.remove();
-  };
-  newLink.href = link.href.split('?')[0] + '?' + Date.now();
-  link.parentNode.insertBefore(newLink, link.nextSibling);
-}
-var cssTimeout = null;
-function reloadCSS() {
-  if (cssTimeout) {
-    return;
-  }
-  cssTimeout = setTimeout(function () {
-    var links = document.querySelectorAll('link[rel="stylesheet"]');
-    for (var i = 0; i < links.length; i++) {
-      if (bundle.getBaseURL(links[i].href) === bundle.getBundleURL()) {
-        updateLink(links[i]);
-      }
+    checkoutSection.style.display = 'block';
+  });
+  confirmPurchaseButton.addEventListener('click', function () {
+    var order = {
+      firstName: checkoutForm['first-name'].value,
+      lastName: checkoutForm['last-name'].value,
+      email: checkoutForm['email'].value,
+      address: checkoutForm['address'].value,
+      creditCard: {
+        cardNumber: checkoutForm['card-number'].value,
+        expiryDate: checkoutForm['expiry-date'].value,
+        cvv: checkoutForm['cvv'].value
+      },
+      cake: JSON.parse(localStorage.getItem('currentCake'))
+    };
+
+    // Save order to localStorage or send to the server here
+    alert('Purchase complete! Your cake is being prepared and shipped.');
+    checkoutSection.style.display = 'none';
+  });
+  var saveButton = document.querySelector('button[type="submit"]');
+  saveButton.addEventListener('click', function (event) {
+    event.preventDefault();
+    var currentCake = {
+      base: document.getElementById('cake-base').value,
+      primaryFrosting: document.getElementById('primary-frosting').value,
+      secondaryFrosting: document.getElementById('secondary-frosting').value,
+      font: document.getElementById('font').value,
+      message: document.getElementById('message-short').value || document.getElementById('message-long').value,
+      pokeball: document.getElementById('pokeball').value,
+      stamps: Array.from(document.querySelectorAll('#pokemon-stamp input[type="checkbox"]:checked')).map(function (cb) {
+        return cb.value;
+      })
+    };
+    localStorage.setItem('currentCake', JSON.stringify(currentCake));
+    if (loggedInUser) {
+      loggedInUser.savedCakes.push(currentCake);
+      localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
+      localStorage.setItem('user_' + loggedInUser.email, JSON.stringify(loggedInUser));
+      alert('Custom cake saved to your account!');
+    } else {
+      alert('Please log in to save your custom cake.');
     }
-    cssTimeout = null;
-  }, 50);
-}
-module.exports = reloadCSS;
-},{"./bundle-url":"../node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+  });
+});
+},{}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -337,5 +349,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js"], null)
-//# sourceMappingURL=/index.js.map
+},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","scripts/checkoutAndSave.js"], null)
+//# sourceMappingURL=/checkoutAndSave.e37850b4.js.map
