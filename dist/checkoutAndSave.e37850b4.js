@@ -119,14 +119,17 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   return newRequire;
 })({"scripts/checkoutAndSave.js":[function(require,module,exports) {
 document.addEventListener('DOMContentLoaded', function () {
+  // Get references to various elements in the checkout form
   var purchaseButton = document.getElementById('purchase-button');
   var confirmPurchaseButton = document.getElementById('confirm-purchase-button');
   var checkoutSection = document.getElementById('checkout-section');
   var checkoutForm = document.getElementById('checkout-form');
   var loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+
+  // Event listener for purchase button
   purchaseButton.addEventListener('click', function () {
     if (loggedInUser) {
-      // Pre-fill checkout form with user data
+      // Pre-fill checkout form with user data if logged in
       checkoutForm['first-name'].value = loggedInUser.firstName;
       checkoutForm['last-name'].value = loggedInUser.lastName;
       checkoutForm['email'].value = loggedInUser.email;
@@ -135,8 +138,10 @@ document.addEventListener('DOMContentLoaded', function () {
       checkoutForm['expiry-date'].value = loggedInUser.creditCard.expiryDate;
       checkoutForm['cvv'].value = loggedInUser.creditCard.cvv;
     }
-    checkoutSection.style.display = 'block';
+    checkoutSection.style.display = 'block'; // Show checkout section
   });
+
+  // Event listener for confirming purchase
   confirmPurchaseButton.addEventListener('click', function () {
     var order = {
       firstName: checkoutForm['first-name'].value,
@@ -148,13 +153,15 @@ document.addEventListener('DOMContentLoaded', function () {
         expiryDate: checkoutForm['expiry-date'].value,
         cvv: checkoutForm['cvv'].value
       },
-      cake: JSON.parse(localStorage.getItem('currentCake'))
+      cake: JSON.parse(localStorage.getItem('currentCake')) // Get current cake from local storage
     };
 
     // Save order to localStorage or send to the server here
     alert('Purchase complete! Your cake is being prepared and shipped.');
-    checkoutSection.style.display = 'none';
+    checkoutSection.style.display = 'none'; // Hide checkout section
   });
+
+  // Event listener for saving custom cake
   var saveButton = document.querySelector('button[type="submit"]');
   saveButton.addEventListener('click', function (event) {
     event.preventDefault();
@@ -169,8 +176,10 @@ document.addEventListener('DOMContentLoaded', function () {
         return cb.value;
       })
     };
-    localStorage.setItem('currentCake', JSON.stringify(currentCake));
+    localStorage.setItem('currentCake', JSON.stringify(currentCake)); // Save current cake to local storage
+
     if (loggedInUser) {
+      // Save custom cake to user account if logged in
       loggedInUser.savedCakes.push(currentCake);
       localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
       localStorage.setItem('user_' + loggedInUser.email, JSON.stringify(loggedInUser));
@@ -205,7 +214,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64896" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49255" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

@@ -119,18 +119,21 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   return newRequire;
 })({"scripts/gallery.js":[function(require,module,exports) {
 document.addEventListener('DOMContentLoaded', function () {
+  // Get references to HTML elements
   var gallery = document.getElementById('cake-gallery');
   var prevBtn = document.getElementById('prev-btn');
   var nextBtn = document.getElementById('next-btn');
   var searchBar = document.getElementById('search-bar');
-  var cakeCount = 50;
+
+  // Constants
+  var cakeCount = 50; // Total number of cakes
   var cakesPerPage = {
     large: 10,
     medium: 8,
     small: 5
-  };
-  var currentPage = 1;
-  var searchQuery = '';
+  }; // Number of cakes per page based on screen size
+  var currentPage = 1; // Current page number
+  var searchQuery = ''; // Search query for filtering cakes
 
   // Function to get the number of cakes per page based on screen size
   function getCakesPerPage() {
@@ -146,23 +149,25 @@ document.addEventListener('DOMContentLoaded', function () {
       var cake = {
         id: i,
         name: "Pok\xE9mon Cake ".concat(i),
-        imgSrc: 'https://via.placeholder.com/200x200'
+        imgSrc: 'https://via.placeholder.com/200x200' // Placeholder image source
       };
       allCakes.push(cake);
     }
     return allCakes;
   }
-  var allCakes = generateAllCakes();
+  var allCakes = generateAllCakes(); // Generate all cakes once
 
-  // Function to render cakes
+  // Function to render cakes in the gallery
   function renderCakes() {
-    var cakesPerPage = getCakesPerPage();
+    var cakesPerPage = getCakesPerPage(); // Get number of cakes per page based on screen size
     var filteredCakes = allCakes.filter(function (cake) {
       return cake.name.toLowerCase().includes(searchQuery.toLowerCase());
-    });
+    }); // Filter cakes based on search query
     var start = (currentPage - 1) * cakesPerPage;
     var end = start + cakesPerPage;
-    gallery.innerHTML = '';
+    gallery.innerHTML = ''; // Clear the gallery
+
+    // Loop through the cakes and add them to the gallery
     for (var i = start; i < end && i < filteredCakes.length; i++) {
       var galleryItem = document.createElement('div');
       galleryItem.classList.add('gallery-item');
@@ -175,17 +180,21 @@ document.addEventListener('DOMContentLoaded', function () {
       galleryItem.appendChild(caption);
       gallery.appendChild(galleryItem);
     }
+
+    // Enable/disable previous and next buttons
     prevBtn.disabled = currentPage === 1;
     nextBtn.disabled = currentPage * cakesPerPage >= filteredCakes.length;
   }
 
-  // Event listeners for buttons
+  // Event listener for the previous button
   prevBtn.addEventListener('click', function () {
     if (currentPage > 1) {
       currentPage--;
       renderCakes();
     }
   });
+
+  // Event listener for the next button
   nextBtn.addEventListener('click', function () {
     var cakesPerPage = getCakesPerPage();
     if (currentPage * cakesPerPage < allCakes.filter(function (cake) {
@@ -196,17 +205,17 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  // Event listener for search bar
+  // Event listener for the search bar
   searchBar.addEventListener('input', function (e) {
     searchQuery = e.target.value;
     currentPage = 1; // Reset to first page on new search
     renderCakes();
   });
 
-  // Initial render
+  // Initial render of cakes
   renderCakes();
 
-  // Re-render on window resize to adjust number of cakes per page
+  // Re-render cakes on window resize to adjust number of cakes per page
   window.addEventListener('resize', renderCakes);
 });
 },{}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
@@ -234,7 +243,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64896" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49255" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

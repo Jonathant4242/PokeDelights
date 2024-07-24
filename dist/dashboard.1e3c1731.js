@@ -119,11 +119,17 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   return newRequire;
 })({"scripts/dashboard.js":[function(require,module,exports) {
 document.addEventListener('DOMContentLoaded', function () {
+  // Retrieve the logged-in user data from localStorage
   var user = JSON.parse(localStorage.getItem('loggedInUser'));
   var userFirstNameSpan = document.getElementById('user-first-name');
   var form = document.getElementById('dashboard-form');
+
+  // Check if user data is available
   if (user) {
+    // Display the user's first name in the welcome message
     userFirstNameSpan.textContent = user.firstName;
+
+    // Pre-fill the form fields with the user's data
     form['first-name'].value = user.firstName;
     form['last-name'].value = user.lastName;
     form['email'].value = user.email;
@@ -132,11 +138,16 @@ document.addEventListener('DOMContentLoaded', function () {
     form['expire-date'].value = user.creditCard.expireDate;
     form['cvv'].value = user.creditCard.cvv;
   } else {
+    // If no user data is found, alert the user and redirect to the login page
     alert('No user data found. Please log in.');
     window.location.href = './login.html';
   }
+
+  // Handle form submission to update user information
   form.addEventListener('submit', function (event) {
     event.preventDefault();
+
+    // Update the user object with the new values from the form
     user.firstName = form['first-name'].value;
     user.lastName = form['last-name'].value;
     user.email = form['email'].value;
@@ -144,12 +155,14 @@ document.addEventListener('DOMContentLoaded', function () {
     user.creditCard.cardNumber = form['card-number'].value;
     user.creditCard.expireDate = form['expire-date'].value;
     user.creditCard.cvv = form['cvv'].value;
+
+    // Save the updated user data back to localStorage
     localStorage.setItem('loggedInUser', JSON.stringify(user));
-    localStorage.setItem(user.email, JSON.stringify(user));
+    localStorage.setItem('user_' + user.email, JSON.stringify(user));
     alert('Information updated successfully!');
   });
 
-  // Display saved cakes if any
+  // Display the user's saved cakes, if any
   var savedCakesContainer = document.getElementById('saved-cakes');
   if (user.savedCakes.length > 0) {
     user.savedCakes.forEach(function (cake, index) {
@@ -158,11 +171,16 @@ document.addEventListener('DOMContentLoaded', function () {
       savedCakesContainer.appendChild(cakeDiv);
     });
   } else {
+    // If no cakes are saved, display a message
     savedCakesContainer.textContent = 'No saved cakes.';
   }
 });
+
+// Function to handle user logout
 function logout() {
+  // Remove the logged-in user data from localStorage
   localStorage.removeItem('loggedInUser');
+  // Redirect to the homepage
   window.location.href = './index.html';
 }
 },{}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
@@ -190,7 +208,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64896" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49255" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

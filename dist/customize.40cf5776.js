@@ -119,6 +119,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   return newRequire;
 })({"scripts/customize.js":[function(require,module,exports) {
 document.addEventListener('DOMContentLoaded', function () {
+  // Get references to various elements in the form
   var primaryFrostingInput = document.getElementById('primary-frosting');
   var secondaryFrostingInput = document.getElementById('secondary-frosting');
   var primaryColorDisplay = document.getElementById('primary-color-display');
@@ -142,6 +143,8 @@ document.addEventListener('DOMContentLoaded', function () {
   var pokemonImageContainer = document.getElementById('pokemon-image-container');
   var pokemonStampCheckboxes = document.querySelectorAll('#pokemon-stamp input[type="checkbox"]');
   var allPokemon = [];
+
+  // Fetch and populate Pokémon types
   fetch('https://pokeapi.co/api/v2/type').then(function (response) {
     return response.json();
   }).then(function (data) {
@@ -154,6 +157,8 @@ document.addEventListener('DOMContentLoaded', function () {
   }).catch(function (error) {
     return console.error('Error fetching Pokémon types:', error);
   });
+
+  // Fetch and populate Pokémon list
   fetch('https://pokeapi.co/api/v2/pokemon?limit=151').then(function (response) {
     return response.json();
   }).then(function (data) {
@@ -169,6 +174,8 @@ document.addEventListener('DOMContentLoaded', function () {
   }).catch(function (error) {
     return console.error('Error fetching Pokémon:', error);
   });
+
+  // Update Pokémon list based on fetched data
   function updatePokemonList(pokemon) {
     pokemonList.innerHTML = '';
     pokemon.forEach(function (p) {
@@ -179,9 +186,13 @@ document.addEventListener('DOMContentLoaded', function () {
       pokemonList.appendChild(option);
     });
   }
+
+  // Display selected Pokémon image
   function displayPokemonImage(pokemon) {
     pokemonImageContainer.innerHTML = "<img src=\"".concat(pokemon.sprites.front_default, "\" alt=\"").concat(pokemon.name, "\">");
   }
+
+  // Filter Pokémon based on search query and selected types
   function filterPokemon() {
     var filteredPokemon = allPokemon;
     var searchQuery = pokemonSearch.value.toLowerCase().trim();
@@ -204,14 +215,20 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     updatePokemonList(filteredPokemon);
   }
+
+  // Update the color display based on the selected frosting colors
   function updateColorDisplay() {
     primaryColorDisplay.style.backgroundColor = primaryFrostingInput.value;
     primaryColorRGB.textContent = primaryFrostingInput.value;
     secondaryColorDisplay.style.backgroundColor = secondaryFrostingInput.value;
     secondaryColorRGB.textContent = secondaryFrostingInput.value;
   }
+
+  // Event listeners for filtering Pokémon
   pokemonSearch.addEventListener('input', filterPokemon);
   pokemonTypeSelect.addEventListener('change', filterPokemon);
+
+  // Event listener for displaying selected Pokémon image
   pokemonList.addEventListener('change', function () {
     var selectedPokemon = pokemonList.value;
     var selectedPokemonData = allPokemon.find(function (p) {
@@ -219,11 +236,15 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     displayPokemonImage(selectedPokemonData);
   });
+
+  // Event listeners for updating color display
   primaryFrostingInput.addEventListener('input', updateColorDisplay);
   secondaryFrostingInput.addEventListener('input', updateColorDisplay);
 
   // Initial color display update
   updateColorDisplay();
+
+  // Calculate total price based on selected options
   function calculateTotalPrice() {
     var totalPrice = 0;
     var selectedCakeBase = cakeBaseSelect.options[cakeBaseSelect.selectedIndex];
@@ -242,9 +263,13 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     totalPriceDiv.textContent = "Total Price: $".concat(totalPrice);
   }
+
+  // Get the current custom message
   function getCurrentMessage() {
     return messageShort.style.display === 'none' ? messageLong.value : messageShort.value;
   }
+
+  // Format the custom message to fit within line limits
   function formatMessage(text, maxLineLength) {
     var lines = [];
     var line = '';
@@ -263,15 +288,21 @@ document.addEventListener('DOMContentLoaded', function () {
     if (line.length > 0) lines.push(line);
     return lines.join('_');
   }
+
+  // Handle input for formatting custom message
   function handleInput(event) {
     var maxLineLength = event.target.id === 'message-short' ? 15 : 20;
     var formattedMessage = formatMessage(event.target.value, maxLineLength);
     event.target.value = formattedMessage;
   }
+
+  // Preview the custom message
   function previewMessage() {
     var message = getCurrentMessage().replace(/_/g, '\n');
     messagePreview.innerHTML = "<pre style=\"font-family: ".concat(fontSelect.value, ";\">").concat(message, "</pre>");
   }
+
+  // Event listeners for custom message length options
   messageLengthRadios.forEach(function (radio) {
     radio.addEventListener('change', function () {
       if (radio.value === 'short') {
@@ -284,13 +315,21 @@ document.addEventListener('DOMContentLoaded', function () {
       calculateTotalPrice();
     });
   });
+
+  // Event listeners for custom message input
   messageShort.addEventListener('input', handleInput);
   messageLong.addEventListener('input', handleInput);
+
+  // Event listener for form changes to recalculate the total price
   form.addEventListener('change', calculateTotalPrice);
+
+  // Event listener for preview button
   previewButton.addEventListener('click', function () {
     previewMessage();
     calculateTotalPrice();
   });
+
+  // Event listener for purchase button
   purchaseButton.addEventListener('click', function () {
     var message = getCurrentMessage();
     if (message.length > 50) {
@@ -302,12 +341,16 @@ document.addEventListener('DOMContentLoaded', function () {
     alert('Purchase complete!');
     // Handle the purchase action here
   });
+
+  // Event listener for form submission to save custom cake
   form.addEventListener('submit', function (event) {
     event.preventDefault();
     alert('Custom cake saved!');
     // Save the custom cake details to localStorage or handle submission here
   });
-  calculateTotalPrice(); // Initial calculation
+
+  // Initial total price calculation
+  calculateTotalPrice();
 });
 },{}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
@@ -334,7 +377,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64896" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49255" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];
