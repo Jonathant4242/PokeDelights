@@ -1,38 +1,97 @@
-<!-- src/gallery.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Pokémon Cake Customization</title>
-        <link rel="stylesheet" href="/styles.b61e60ae.css">
-    </head>
-    <body>
-        <header>
-            <div class="logo">
-                <img src="/logo.6023b87e.png" alt="PokeDelights Logo">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Customize your Pokémon-themed cake with various options and designs.">
+    <title>Customize Your Cake - PokeDelights</title>
+    <link rel="stylesheet" type="text/css" href="/styles.b61e60ae.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="/logo.6023b87e.png" alt="PokeDelights Logo">
+        </div>
+        <h1>PokeDelights</h1>
+        <nav>
+            <ul>
+                <li><a href="/index.html">Home</a></li>
+                <li><a href="/gallery.html">Pokémon Cake Gallery</a></li>
+                <li><a href="/customize.html">Cake Customization Tool</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Customize Your Cake</h2>
+        <form id="custom-cake-form">
+            <label for="cake-base">Choose a Cake Base:</label>
+            <select id="cake-base">
+                <option value="vanilla" data-price="10">Vanilla - $10</option>
+                <option value="chocolate" data-price="12">Chocolate - $12</option>
+                <option value="red velvet" data-price="15">Red Velvet - $15</option>
+            </select>
+
+            <label for="pokemon-search">Select Your Pokemon From Professor Oak:</label>
+            <input type="text" id="pokemon-search" placeholder="Search for a Pokemon">
+            <select id="pokemon-type" multiple="">
+                <!-- Dynamically populated with Pokemon types -->
+            </select>
+            <select id="pokemon-list"></select>
+            <div id="pokemon-image-container"></div>
+
+            <label for="primary-frosting">Primary Frosting Color:</label>
+            <input type="color" id="primary-frosting" name="primary-frosting" value="#ffffff">
+
+            <label for="secondary-frosting">Secondary Frosting Color:</label>
+            <input type="color" id="secondary-frosting" name="secondary-frosting" value="#000000">
+
+            <label for="font">Choose a Font:</label>
+            <select id="font">
+                <option value="Arial" style="font-family: Arial;">Arial</option>
+                <option value="Helvetica" style="font-family: Helvetica;">Helvetica</option>
+                <option value="Comic Sans MS" style="font-family: 'Comic Sans MS';">Comic Sans MS</option>
+            </select>
+
+            <label>Custom Message Length:</label>
+            <div class="message-length-options">
+                <input type="radio" id="length-short" name="message-length" value="short" checked="">
+                <label for="length-short">50 characters or less</label>
+                <input type="radio" id="length-long" name="message-length" value="long">
+                <label for="length-long">51 to 100 characters</label>
             </div>
-            <h1>Pokémon Cake Customization</h1>
-            <nav>
-                <ul>
-                    <li><a href="/index.html">Home</a></li>
-                    <li><a href="/gallery.html">Pokémon Cake Gallery</a></li>
-                    <li><a href="/customize.html">Cake Customization Tool</a></li>
-                </ul>
-            </nav>
-        </header>
-    
-        <main>
-            <!-- Gallery content goes here -->
-        </main>
-    
-        <footer>
-            <p>&copy;NOT a real business</p>
-        </footer>
-    
-        <script src="/customize.40cf5776.js"></script>
-    </body>
-    </html></head></html>
+
+            <label for="message-short">Custom Message (50 characters or less):</label>
+            <textarea id="message-short" maxlength="50" placeholder="Enter your custom message here"></textarea>
+
+            <label for="message-long" style="display: none;">Custom Message (51 to 100 characters):</label>
+            <textarea id="message-long" maxlength="100" placeholder="Enter your custom message here" style="display: none;"></textarea>
+
+            <button type="button" id="preview-button">View Preview</button>
+            <div id="message-preview"></div>
+
+            <label for="pokeball">Choose a Poké Ball:</label>
+            <select id="pokeball">
+                <option value="pokeball" data-price="5">Poké Ball - $5</option>
+                <option value="great ball" data-price="7">Great Ball - $7</option>
+                <option value="ultra ball" data-price="10">Ultra Ball - $10</option>
+                <option value="master ball" data-price="15">Master Ball - $15</option>
+            </select>
+
+            <label for="pokemon-stamp">Choose a Pokémon Stamp:</label>
+            <select id="pokemon-stamp"></select>
+
+            <div id="total-price">Total Price: $0</div>
+
+            <button type="submit">Save Custom Cake</button>
+            <button type="button" id="purchase-button">Purchase</button>
+        </form>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 PokeDelights. All rights reserved.</p>
+    </footer>
+
+    <script src="/customize.40cf5776.js"></script>
+</body>
+</html>
